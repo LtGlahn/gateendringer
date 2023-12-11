@@ -1,4 +1,9 @@
 # gateendringer
-Python-kode for å generere endringsett med gatenavn
+Python-kode for å generere endringsett med gatenavn. Rekonstruert fra arkiv fra Kartverket. Ikke helt stø på 
+kodens funksjon, jobber med å trenge inn i hva som skjer versus hva som egentlig burde skje. 
 
-Leser objekttypen GATE fra NVDB api LES, sammenligner med Kartverkets manus og genererer endringsett som kan sendes til SKRIV
+Overordnet så skal koden sammenligne data fra objekttypen GATE fra NVDB api LES med Kartverkets manus og finne 
+hva som bør oppdateres (korrigeres eller registreres?). Sluttresultatet er innsending av endringsett til NVDB api  SKRIV.  
+
+Via angitt YAML konfigurasjonsfil (p.t. `config_prod_v3.yml` ) så konfigurees både generiske python-funksjoner (f.eks logging) og en del variabler som brukes av scriptet `crawl_V2.py`, så som mappenavn, filnavn, lenke til NVDB api og en del andre ting. 
+
