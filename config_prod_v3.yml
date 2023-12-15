@@ -10,11 +10,11 @@ login:
   user: 'arnesonf'
 
 gate:
-  url_gater : 'https://www.vegvesen.no/nvdb/api/v3/vegobjekter/538.json?inkluder=lokasjon,metadata,egenskaper&inkludergeometri=ingen'
-  url_status : 'https://www.vegvesen.no/nvdb/api/v3/status'
-  url_statistikk : 'https://www.vegvesen.no/nvdb/api/v3/vegobjekter/538/statistikk.json'
-  url_template_enkeltgate : 'https://www.vegvesen.no/nvdb/api/v3/vegobjekter/538/{}'
-  url_template_kommune : 'https://www.vegvesen.no/nvdb/api/v3/vegobjekter/{}/{}'
+  url_gater : 'https://nvdbapiles-v3.atlas.vegvesen.no/vegobjekter/538.json?inkluder=lokasjon,metadata,egenskaper&inkludergeometri=ingen'
+  url_status : 'https://nvdbapiles-v3.atlas.vegvesen.no/status'
+  url_statistikk : 'https://nvdbapiles-v3.atlas.vegvesen.no/vegobjekter/538/statistikk.json'
+  url_template_enkeltgate : 'https://nvdbapiles-v3.atlas.vegvesen.no/vegobjekter/538/{}'
+  url_template_kommune : 'https://nvdbapiles-v3.atlas.vegvesen.no/{}/{}'
   kommune_typeid : 536
   filnavn_template_apigater: 'nvdbapigater_{}.json'
   filnavn_template_gaterutensted: 'gaterutensted_{}.json'
