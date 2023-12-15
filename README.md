@@ -17,7 +17,7 @@ conda activate gateendring
  ```
 
 
- ### Instalasajon med pip 
+ ### Installasjon med pip 
 
  Har denne (kanskje ikke komplette?) oppskriften - som trolig forutsetter at man har python 3.9 (fra realpython.org?) installert på sin lokale bruker på windows PC. 
 

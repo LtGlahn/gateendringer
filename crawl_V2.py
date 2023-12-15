@@ -8,6 +8,7 @@ import datetime
 import io
 import codecs
 import argparse
+import pdb
 
 from clint.textui import progress
 from config import config
@@ -23,10 +24,10 @@ parser.add_argument("-gatenavnfil", "-f", required=True)
 parser.add_argument("-utfilnavn", "-u", required=True)
 parser.add_argument("-config", "-c", required=True)
 parser.add_argument("-apigatefil", "-a")
-
+headers = {'content-type': 'application/json', 'Accept': 'application/json', 'X-Client' : 'LtGlahn python'}
 
 def skriv_apistatus():
-    status = requests.get(cfg.get('gate', 'url_status')).json()
+    status = requests.get(cfg.get('gate', 'url_status'), headers=headers ).json()
     print(status.get('datagrunnlag'))
 
 
@@ -43,7 +44,7 @@ def loggoppsett():
 def hent_kommunenr(nvdbid):
     kommuneurl = cfg.get('gate', 'url_template_kommune').format(cfg.get('gate','kommune_typeid'), nvdbid)
     print(kommuneurl)
-    data = requests.get(kommuneurl).json()
+    data = requests.get(kommuneurl, headers=headers).json()
     for e in data.get('egenskaper', []):
         if e.get('navn') == 'Kommunenummer':
             return e.get('verdi')
@@ -51,9 +52,10 @@ def hent_kommunenr(nvdbid):
 
 def hent_kommune_fra_relasjon(nvdbid):
     url = cfg.get('gate','url_template_enkeltgate').format(nvdbid)
-    data = requests.get(url).json()
+    data = requests.get(url, headers=headers).json()
     print(url)
     barn = data.get('relasjoner', {}).get('barn', [])
+    pdb.set_trace()
     for b in barn:
         if b.get('type', {}).get('id', None) == int(cfg.get('gate','kommune_typeid')):
             kommune_objekter = b.get('vegobjekter', [])
@@ -95,9 +97,9 @@ def behandle(objekter):
         gate['versjon'] = o['metadata']['versjon']
         k = o['lokasjon'].get('kommuner', [])
         for e in o['egenskaper']:
-            if e['navn'] == 'Gatekode':
+            if e['navn'] == 'Adressekode':
                 gate['kode'] = e['verdi']
-            if e['navn'] == 'Gatenavn':
+            if e['navn'] == 'Adressenavn':
                 gate['navn'] = e['verdi'].strip()
 
         if k:
@@ -115,7 +117,7 @@ def behandle(objekter):
 
 
 def hent(url):
-    r = requests.get(url)
+    r = requests.get(url, headers=headers)
     data = r.json()
     behandle(data.get('objekter',[]))
     return data.get('metadata', {}).get('neste', {}).get('href')
@@ -124,7 +126,7 @@ def hent(url):
 
 def hent_nvdb_gater(bar):
     bar.label = "Laster ned... "
-    antall = requests.get(cfg.get('gate', 'url_statistikk')).json().get('antall')
+    antall = requests.get(cfg.get('gate', 'url_statistikk'), headers=headers).json().get('antall')
     neste = cfg.get('gate', 'url_gater') 
     forrige = ''
     while neste != forrige:
@@ -164,22 +166,23 @@ def lag_forslag(bar, utfilnavn="forslag_test.txt"):
     bar.label = "Sammenlikner... "
     file = codecs.open(utfilnavn, "w", "utf-8")
     count = 0
-    for k in matrikkel_gater.keys():
+    for k in matrikkel_gater.keys(): # k = kommunenummer 
         count += 1
-        ng = nvdb_gater.get(k, [])
-        for g in matrikkel_gater.get(k, []):
-            for n in ng:
+        ng = nvdb_gater.get(k, []) # NVDB gate-objekter for kommune k 
+                                   # Disse mangler p.t. gatekode og adressenavn (datakatalog-endring med navnebytte, før het det kode og navn)
+                                   # Eks på data i dag {'id': 1286600, 'versjon': 2, 'kommune': '0301'}
+        for g in matrikkel_gater.get(k, []):  # EKS {'kommune': '0301', 'navn': 'Abbediengen terrasse', 'kode': '10010'}
+            for n in ng: 
                 try:
                     #print int(g['kode']), int(n['kode']), int(g['kode']) == int(n['kode']) or ""
                     if int(g['kode']) == int(n['kode']):
                         if ('navn' not in n.keys()) or (n['navn'] != g['navn']):
                             file.write(u"{},{},{},{},{}\n".format(n['id'], n['versjon'], n['kode'], g['kommune'], g['navn']))
                 except KeyError:
-                    print (g, n)
+                    pdb.set_trace()
+                    print ("lag_forslag FEIL",  g, n)
         bar.show(math.floor((count * 100) / len(matrikkel_gater.keys())))
     file.close()
-
-
 
 
 if __name__ == "__main__":
