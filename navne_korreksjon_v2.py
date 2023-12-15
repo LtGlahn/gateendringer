@@ -3,6 +3,7 @@
 import argparse
 import codecs
 import traceback
+import pdb
 
 from config import config
 from korreksjonssett import korreksjonssett, endringssett
