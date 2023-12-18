@@ -1,19 +1,19 @@
 import pickle
-import requests
 import json
+import pdb
 
 from korreksjonssett import endringssett
 
 
 class Korreksjonssett:
-    def __init__(self, config, auth, typeid, propertyid, readtimestamp):
+    def __init__(self, config, forb, typeid, propertyid, readtimestamp):
         self.endringssett = {}
         self.config = config
-        self.auth = auth
+        self.forb = forb
+        self.forb.klientinfo( 'Gatenavnimport' )
         self.nvdb_type_id = typeid
         self.nvdb_property_id = propertyid
         self.readtimestamp = readtimestamp
-        self.headers = {'content-type': 'application/json', 'Accept': 'application/json', 'X-Client': 'Gatenavnimport'}
 
         self.url_template_lesforskriv = config.get('skriv', 'url_template_lesforskriv')
         self.url_template_lesobjekt = config.get('gate', 'url_template_enkeltgate')
@@ -22,7 +22,7 @@ class Korreksjonssett:
 
     def sjekk_objektforekomst(self, nvdbid, versjon):
         lurl = self.url_template_lesforskriv.format(self.nvdb_type_id, nvdbid, versjon)
-        tr = requests.get(lurl, cookies=self.auth)
+        tr = self.forb.les(lurl )
         print(tr.status_code, lurl)
         return tr.status_code == 200
 
@@ -42,7 +42,7 @@ class Korreksjonssett:
 
     def finn_versjon(self, nvdbid):
         url = self.url_template_lesobjekt.format(nvdbid)
-        data = requests.get(url).json()
+        data = self.forb.les(url).json()
         versjon = data.get('metadata', {}).get('versjon')
         return versjon
 
@@ -95,7 +95,8 @@ class Korreksjonssett:
 
 
     def post(self, endringssett):
-        r = requests.post(self.url_skriv, cookies=self.auth, data=json.dumps(endringssett.lag_payload()), headers=self.headers)
+        # r = self.forb.skrivtil(self.url_skriv, data=json.dumps(endringssett.lag_payload()) )
+        r = self.forb.skrivtil(self.url_skriv, endringssett.lag_payload() )
         print("posting: ", endringssett.key, r.status_code)
         if r.status_code == 201:
             endringssett.uri = r.json()[0].get('src')
@@ -103,12 +104,12 @@ class Korreksjonssett:
         else:
             endringssett.fremdrift = "FAILED POST"
             endringssett.uri = None
-
+            print( "Feilmelding SKRIV POST:", r.text  )
 
 
     def start(self, endringssett):
         if endringssett.uri and (endringssett.fremdrift in ["POSTED", "FAILED START", "IKKE STARTET"]):
-            r = requests.post(endringssett.uri + '/start', cookies=self.auth, headers=self.headers)
+            r = self.forb.skrivtil(endringssett.uri + '/start', {} )
             print("starting: ", endringssett.key, r.status_code)
 
             if r.status_code == 202:
@@ -124,7 +125,7 @@ class Korreksjonssett:
                 self.start()
             if endringssett.fremdrift not in ["UTFØRT", "AVVIST", "UTFØRT_OG_ETTERBEHANDLET", "FAILED_POST"]:
                 if endringssett.uri:
-                    r = requests.get(endringssett.uri + '/fremdrift', cookies=self.auth, headers=self.headers)
+                    r = self.forb.les(endringssett.uri + '/fremdrift' )
                     endringssett.fremdrift = r.text.replace('"', '')
                     print("polled :", endringssett.key, endringssett.fremdrift)
                 else:
@@ -133,14 +134,14 @@ class Korreksjonssett:
     def resultat_fra_skriv(self, label):
         url = self.endringssett.get(label, {}).uri
         if url:
-            data = requests.get(url, cookies=self.auth, headers=self.headers).json()
+            data = self.forb.les(url).json()
             return data.get('status', {}).get('resultat', {})
         return None
 
     def hent_endringssett_fra_skriv(self, label):
         url = self.endringssett.get(label, {}).uri
         if url:
-            data = requests.get(url, cookies=self.auth, headers=self.headers).json()
+            data = self.forb.les(url).json()
             return data
         return None
 

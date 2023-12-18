@@ -6,7 +6,7 @@ from korreksjonssett import korreksjon
 
 
 class Endringssett:
-    def __init__(self, key, readtimestamp, datakatalogversjon="2.20"):
+    def __init__(self, key, readtimestamp, datakatalogversjon="2.35"):
 
         self.fremdrift = None
         self.uri = None
