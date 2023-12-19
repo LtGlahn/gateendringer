@@ -1,21 +1,21 @@
 skriv:
-  url_template_lesforskriv: 'https://nvdbapiskriv.test.atlas.vegvesen.no/rest/v3/les/vegobjekt/{}/{}/{}'
-  url_skriv:    'https://nvdbapiskriv.test.atlas.vegvesen.no/rest/v3/endringssett/'
+  url_template_lesforskriv: 'https://nvdbapiskriv.atlas.vegvesen.no/rest/v3/les/vegobjekt/{}/{}/{}'
+  url_skriv:    'https://nvdbapiskriv.atlas.vegvesen.no/rest/v3/endringssett/'
 
 auth:
-  url_login: 'https://www.test.vegvesen.no/ws/no/vegvesen/ikt/sikkerhet/aaa/'
+  url_login: 'https://www.vegvesen.no/ws/no/vegvesen/ikt/sikkerhet/aaa/'
   login_headers: {'content-type': 'application/json', 'Accept': 'application/json', 'X-Client' : 'LtGlahn python'}
 
 login:
   user: 'arnesonf'
-  miljo: 'testskriv'
+  miljo: 'prodskriv'
 
 gate:
-  url_gater : 'https://nvdbapiles-v3.test.atlas.vegvesen.no/vegobjekter/538.json?inkluder=lokasjon,metadata,egenskaper&inkludergeometri=ingen'
-  url_status : 'https://nvdbapiles-v3.test.atlas.vegvesen.no/status'
-  url_statistikk : 'https://nvdbapiles-v3.test.atlas.vegvesen.no/vegobjekter/538/statistikk.json'
-  url_template_enkeltgate : 'https://nvdbapiles-v3.test.atlas.vegvesen.no/vegobjekter/538/{}'
-  url_template_kommune : 'https://nvdbapiles-v3.test.atlas.vegvesen.no/{}/{}'
+  url_gater : 'https://nvdbapiles-v3.atlas.vegvesen.no/vegobjekter/538.json?inkluder=lokasjon,metadata,egenskaper&inkludergeometri=ingen'
+  url_status : 'https://nvdbapiles-v3.atlas.vegvesen.no/status'
+  url_statistikk : 'https://nvdbapiles-v3.atlas.vegvesen.no/vegobjekter/538/statistikk.json'
+  url_template_enkeltgate : 'https://nvdbapiles-v3.atlas.vegvesen.no/vegobjekter/538/{}'
+  url_template_kommune : 'https://nvdbapiles-v3.atlas.vegvesen.no/{}/{}'
   kommune_typeid : 536
   filnavn_template_apigater: 'nvdbapigater_{}.json'
   filnavn_template_gaterutensted: 'gaterutensted_{}.json'
