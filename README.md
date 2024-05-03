@@ -1,11 +1,38 @@
 # gateendringer
-Python-kode for å generere endringsett med gatenavn. Rekonstruert fra arkiv fra Kartverket. Ikke helt stø på 
-kodens funksjon, jobber med å trenge inn i hva som skjer versus hva som egentlig burde skje. 
+Python-kode for å generere endringsett med gatenavn. Rekonstruert fra arkiv fra Kartverket.
 
 Overordnet så skal koden sammenligne data fra objekttypen GATE fra NVDB api LES med Kartverkets manus og finne 
 hva som bør oppdateres (korrigeres eller registreres?). Sluttresultatet er innsending av endringsett til NVDB api  SKRIV.  
 
 Via angitt YAML konfigurasjonsfil (p.t. `config_prod_v3.yml` ) så konfigurees både generiske python-funksjoner (f.eks logging) og en del variabler som brukes av scriptet `crawl_V2.py`, så som mappenavn, filnavn, lenke til NVDB api og en del andre ting. 
+
+Merk at brukernavnet som står i config-fila blir ignorert: Ved skriving blir du interaktivt spurt om brukernavn og passord i shellet. Hvis det er mer gunstig
+å lagre brukernavn og passord i config-fila så er dette selvsagt trivielt å gjøre om på. 
+
+# Kjøring av script på WSL
+
+Først denne kommandoen: 
+```bash
+python crawl_V2.py -f Adresser_20240429.txt -u gatenavn_ut_20240429 -c config_prod_v3.yml
+```
+filnavnet bak `-u` parameter velger du fritt, men dette filnavnet skal gjebrukes i neste steg
+
+Merk transaksjonstidspunktet som kommer aller først i output på terminalen: 
+```python
+{  'sist_oppdatert': '2024-05-03T17:04:41.060955', 
+   'sist_prosesserte_transaksjon': {'transaksjonsid': 6395966, 'transaksjonstidspunkt': '2024-05-03T17:04:24', 'indekseringstidspunkt': '2024-05-03T17:04:41'}, 'datakatalog': {'id': 976, 'dato': '2024-03-22', 'versjon': '2.36'}}
+```
+Transaksjonstidspunkt pluss utfila fra kommandoen over inngår i neste kommando, slik: 
+```bash 
+python navne_korreksjon_v2.py -f gatenavn_ut_20240429 -c config_prod_v3.yml -t 2024-05-03T17:04:24
+```
+Du blir nå spurt om ditt SVV brukernavn og passord, dvs det du bruker for å logge inn i APISKRIV. 
+
+Etterpå kan du bruke NVDB skriveapi kontrollpanel for å sjekke om alt gikk gjennom. Klientinformasjon `gatenavnimport` er et greit filter for disse endringssettene. 
+
+![skjermdump skriveapi kontrollpanel](./pics/skriveapi_kontrollpanel.png)
+
+
 
 ### Installasjon med conda environments
 

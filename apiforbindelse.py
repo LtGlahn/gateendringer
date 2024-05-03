@@ -107,7 +107,7 @@ class apiforbindelse( ):
             print( 'Miljø finnes ikke! stm-utvles, utvles, utvskriv, testles, testskriv, prodles, prodskriv')
 
                               
-    def login(self, miljo=None, username='jajens', pw=None, klient=None, realm='EMPLOYEE', user_type='employee'): 
+    def login(self, miljo=None, username=None, pw=None, klient=None, realm='EMPLOYEE', user_type='employee'): 
         """
         Logger inn i api.
         
@@ -145,9 +145,9 @@ class apiforbindelse( ):
             self.velgmiljo( miljo=miljo)
 
         if 'skriv' in self.miljo: 
-            self.__loginskriv( username='jajens', pw=pw, realm=realm )
+            self.__loginskriv( username=username, pw=pw, realm=realm )
         elif 'les' in self.miljo: 
-           self.__loginles( username='jajens', pw=pw, user_type=user_type ) 
+           self.__loginles( username=username, pw=pw, user_type=user_type ) 
         else: 
             print( 'Miljø ikke korrekt angitt', self.miljo )
     
@@ -157,7 +157,7 @@ class apiforbindelse( ):
 
         self.headers['X-Client-Session'] = str( uuid.uuid4() )
 
-    def __loginles( self, username='jajens', pw=None, user_type='employee' ): 
+    def __loginles( self, username=None, pw=None, user_type='employee' ): 
         """
         Logger inn på apiles, ref
         https://nvdbapilesv3.docs.apiary.io/#reference/0/autentisering/innlogging
@@ -196,7 +196,7 @@ class apiforbindelse( ):
             print( self.loginrespons.text )
 
 
-    def __loginskriv( self, username='jajens', pw=None, klient=None, realm='EMPLOYEE'): 
+    def __loginskriv( self, username=None, pw=None, klient=None, realm='EMPLOYEE'): 
         """
         Logger inn mot apiskriv 
 
@@ -249,7 +249,7 @@ class apiforbindelse( ):
     def SVVpassord( self, username=None, pw=None): 
         
         if not username: 
-            username = input( 'Username: ' )
+            username = input( 'SVV brukernavn: ' )
         if not pw: 
             pw = getpass.getpass( username+"'s Password: ")
         headers = copy.deepcopy( self.headers )

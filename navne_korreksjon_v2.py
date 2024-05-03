@@ -45,7 +45,9 @@ if __name__ == "__main__":
     cfg = config.Config(args.config)
 
     forb = apiforbindelse.apiforbindelse()
-    forb.login( miljo=cfg.get( 'login', 'miljo'), username=cfg.get( 'login', 'user'))
+    # synes det er mer ryddig å be om brukernavn når du kjører scriptet
+    # forb.login( miljo=cfg.get( 'login', 'miljo'), username=cfg.get( 'login', 'user'))
+    forb.login( miljo=cfg.get( 'login', 'miljo') )
     filnavn = args.gatenavnfil
 
     korreksjonssett = les_navnekorreksjoner(filnavn, cfg, forb, args.read_timestamp)
