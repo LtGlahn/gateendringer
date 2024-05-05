@@ -33,20 +33,31 @@ Etterpå kan du bruke NVDB skriveapi kontrollpanel for å sjekke om alt gikk gje
 ![skjermdump skriveapi kontrollpanel](./pics/skriveapi_kontrollpanel.png)
 
 
-
 ### Installasjon med conda environments
 
-Her har jeg prøvd å gjenskape virituelt miljø basert på "pip create" - oppskriften nedenfor (bør unngå pip når du ellers jobber med conda)
+Her skaper jeg et virituelt conda-miljø basert på den eldre pip - basert oppskriften nedenfor (bør unngå pip når du ellers jobber med conda)
 
 ```bash
 conda create -n gateendring python=3.9 pyyaml clint requests ipykernel 
 conda activate gateendring
  ```
 
+ og så kjører man `conda activate gateendring` når du skal bruke det virituelle miljøet. 
+ 
+# Kommentarer til gammel oppskrift
+
+ Oppskriften er skreddersydd for at folk skal kunne bruke  kommandoen `pip` (og tilhørende `pipenv`) til å installere nødvendige utvidelser på en blodfersk installasjon av python på windows, samt at pip / pipenv brukes til å kjøre koden sammen med disse utvidelsene. 
+
+Jeg finner ikke filen `poll.py`, men den er da også overflødig (mye bedre å sjekke status i skriveapi kontrollpanel).
+
+Koden er varsomt modifisert, men uten å endre på den grunnleggende logikken: 
+  * Vi bruker de nyeste endepunktene for LES og SKRIV
+  * Påloggingsmetode var utdatert, denne er oppdatert med ny kode
+  * Brukernavn og passord skriver du nå interaktivt i kommandovindu, ikke i konfigurasjonsfil. 
 
  ### Installasjon med pip 
 
- Har denne (kanskje ikke komplette?) oppskriften - som trolig forutsetter at man har python 3.9 (fra realpython.org?) installert på sin lokale bruker på windows PC. 
+ Har denne oppskriften. Virker som om utgangspunktet python 3.9 (fra realpython.org?) installert på sin lokale bruker på windows PC. **Ikke testet**, men dette var jo utgangspunkt for min egen oppskrift over. 
 
  ```
  Pipfile
@@ -58,9 +69,9 @@ pipenv install clint
 pipenv install requests
 ```
 
-# Wordfil-oppskrift
+# Gammel Wordfil-oppskrift
 
-_Dette er Kartverkets word-fil med notater, trolig satt sammen fra epostdialog kombinert med egne notater:_
+_Dette er Kartverkets word-fil med notater, trolig satt sammen fra diverse epostdialog kombinert med notater underveis, over flere år:_
 
 ~~Gatenavnfila~~ Adressefila (NB! Byttet begrep 2023) må ligge på katalogen en står i:
 
@@ -99,3 +110,4 @@ Hvis pip mangler:
 1. Naviger til python-installasjonsmappen under `C:\Program Files\Python-<VERSJON`
 1. KJør denne kommandoen: `py -3 -m ensurepip`
 
+**KOMMENTAR fra Jan** Finner ikke filen `poll.py` (men den er også overflødig, bruk heller skriveapi kontrollpanel)

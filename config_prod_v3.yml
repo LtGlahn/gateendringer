@@ -7,7 +7,7 @@ auth:
   login_headers: {'content-type': 'application/json', 'Accept': 'application/json', 'X-Client' : 'LtGlahn python'}
 
 login:
-  user: 'arnesonf'
+  user: 'jajens'
   miljo: 'prodskriv'
 
 gate:
